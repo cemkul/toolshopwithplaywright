@@ -12,7 +12,8 @@ public class DriverFactory {
         playwright = Playwright.create();
 
         String browserName = ConfigReader.get("browser");
-        boolean headless = ConfigReader.getBoolean("headless");
+        boolean headless = Boolean.parseBoolean(
+                System.getProperty("headless", String.valueOf(ConfigReader.getBoolean("headless"))));
         int slowMo = ConfigReader.getInt("slow.motion");
 
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions()

@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -12,29 +14,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Setup Java 17 with Maven cache
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
+          cache: maven
 
       - name: Install Playwright Browsers
         run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
 
       - name: Run Maven Tests
-        run: mvn clean test
+        run: mvn clean test -Dheadless=true
+
+      - name: Install Allure CLI
+        if: always()
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
+          tar -zxvf allure-2.29.0.tgz
+          sudo mv allure-2.29.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+      - name: Generate Allure HTML Report
+        if: always()
+        run: allure generate target/allure-results --clean -o target/allure-report
 
       - name: Upload Allure Results
         if: always()
@@ -42,3 +48,10 @@ jobs:
         with:
           name: allure-results
           path: target/allure-results
+
+      - name: Upload Allure HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: target/allure-report
