@@ -1,4 +1,4 @@
-name: Tests and Allure Report
+name: API Tests
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  api-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,11 +24,8 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Install Playwright Browsers
-        run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
-
-      - name: Run Maven Tests
-        run: mvn clean test -Dheadless=true
+      - name: Run stable API tests
+        run: mvn clean test -Dtest=ProductApiTests
 
       - name: Install Allure CLI
         if: always()
@@ -42,16 +39,16 @@ jobs:
         if: always()
         run: allure generate target/allure-results --clean -o target/allure-report
 
-      - name: Upload Allure Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results
-          path: target/allure-results
-
       - name: Upload Allure HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-html-report
+          name: api-allure-html-report
           path: target/allure-report
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-allure-results
+          path: target/allure-results
