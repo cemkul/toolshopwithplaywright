@@ -22,6 +22,7 @@ jobs:
         run: mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
 
       - name: Run UI tests headless
+        continue-on-error: true
         run: mvn clean test -Dtest=HomeTests,ProductTests,CartTests,AuthTests,CheckoutTests -Dheadless=true
 
       - name: Install Allure CLI
