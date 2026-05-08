@@ -23,7 +23,7 @@ jobs:
 
       - name: Run integration tests headless
         continue-on-error: true
-        run: mvn clean test -Dtest=ProductApiUiIntegrationTests -Dheadless=true
+        run: xvfb-run -a mvn clean test -Dtest=ProductApiUiIntegrationTests -Dheadless=false
 
       - name: Install Allure CLI
         if: always()
