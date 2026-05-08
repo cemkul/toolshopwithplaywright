@@ -19,30 +19,26 @@ jobs:
           cache: maven
 
       - name: Install Playwright Browsers
-        run: |
-          mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps" -e
-      - name: Run UI tests headless
-        continue-on-error: true
-        run: mvn clean test -Dtest=HomeTests,ProductTests,CartTests,AuthTests,CheckoutTests -Dheadless=true
+        shell: cmd
+        run: mvn exec:java -D"exec.mainClass=com.microsoft.playwright.CLI" -D"exec.args=install"
 
-      - name: Install Allure CLI (Windows)
-        if: always() && runner.os == 'Windows'
+      - name: Run UI tests
+        continue-on-error: true
+        shell: cmd
+        run: mvn clean test -Dtest=HomeTests,ProductTests,CartTests,AuthTests,CheckoutTests -Dheadless=false
+
+      - name: Install Allure CLI
+        if: always()
+        shell: powershell
         run: |
           $progressPreference = 'silentlyContinue'
           Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip" -OutFile "allure.zip"
           Expand-Archive -Path allure.zip -DestinationPath "C:\"
           echo "C:\allure-2.29.0\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Install Allure CLI (Linux)
-        if: always() && runner.os == 'Linux'
-        run: |
-          wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz
-          tar -zxvf allure-2.29.0.tgz
-          sudo mv allure-2.29.0 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
-
       - name: Generate Allure HTML Report
         if: always()
+        shell: cmd
         run: allure generate target/allure-results --clean -o target/allure-report
 
       - name: Upload Allure HTML Report
