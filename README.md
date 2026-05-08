@@ -176,4 +176,59 @@ The following table represents the manual test definitions for the automated UI,
 | INT-001 | API + UI Integration | Product            | Verify product returned by API is searchable in UI      | Validate that product data from API is visible in UI.                       | API and UI are available.                     | 1. Get product name from API. 2. Search same product in UI.                                                                                                                  | Product should be displayed in UI search results.                             | ProductApiUiIntegrationTests |
 
 ---
+# CI/CD Pipelines
+
+![API Tests](https://github.com/cemkul/toolshopwithplaywright/actions/workflows/api-tests.yml/badge.svg)
+
+![UI Tests](https://github.com/cemkul/toolshopwithplaywright/actions/workflows/ui-tests.yml/badge.svg)
+
+![Integration Tests](https://github.com/cemkul/toolshopwithplaywright/actions/workflows/integration-tests.yml/badge.svg)
+
+This project uses GitHub Actions for Continuous Integration and automated test execution.
+
+## Implemented Workflows
+
+### API Tests
+
+* Executes REST API automation tests
+* Uses Rest Assured + JUnit 5
+* Runs on GitHub-hosted runners
+* Generates Allure reports
+
+### UI Tests
+
+* Executes Playwright UI automation tests
+* Runs on a Windows self-hosted runner
+* Implemented to avoid cloud browser restrictions and Cloudflare-related issues
+* Generates downloadable Allure HTML reports
+
+### Integration Tests
+
+* Executes API + UI combined validation scenarios
+* Verifies product data consistency between backend and frontend
+* Generates Allure reports as workflow artifacts
+
+---
+
+# Workflow Strategy
+
+The framework separates execution pipelines for better maintainability and scalability.
+
+| Workflow          | Purpose                        |
+| ----------------- | ------------------------------ |
+| API Tests         | Backend/API validation         |
+| UI Tests          | Frontend browser automation    |
+| Integration Tests | API + UI end-to-end validation |
+
+Advantages:
+
+* Independent execution
+* Faster debugging
+* Better CI stability
+* Parallel execution support
+* Cleaner test organization
+
+---
+
+
 
