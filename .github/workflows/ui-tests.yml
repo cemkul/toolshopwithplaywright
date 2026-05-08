@@ -19,8 +19,7 @@ jobs:
           cache: maven
 
       - name: Install Playwright Browsers
-        run: mvn -e exec:java  -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
-
+        run: mvn -e exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
       - name: Run UI tests headless
         continue-on-error: true
         run: xvfb-run -a mvn clean test -Dtest=HomeTests,ProductTests,CartTests,AuthTests,CheckoutTests -Dheadless=true
