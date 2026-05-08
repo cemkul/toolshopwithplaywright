@@ -18,28 +18,22 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Install Playwright Browsers
-        shell: cmd
-        run: mvn exec:java -D"exec.mainClass=com.microsoft.playwright.CLI" -D"exec.args=install"
-
       - name: Run UI tests
-        continue-on-error: true
         shell: cmd
+        continue-on-error: true
         run: mvn clean test -Dtest=HomeTests,ProductTests,CartTests,AuthTests,CheckoutTests -Dheadless=false
 
-      - name: Install Allure CLI
+      - name: Add Allure to PATH
         if: always()
         shell: powershell
         run: |
-          $progressPreference = 'silentlyContinue'
-          Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.zip" -OutFile "allure.zip"
-          Expand-Archive -Path allure.zip -DestinationPath "C:\"
           echo "C:\allure-2.29.0\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          C:\allure-2.29.0\bin\allure.bat --version
 
       - name: Generate Allure HTML Report
         if: always()
         shell: cmd
-        run: allure generate target/allure-results --clean -o target/allure-report
+        run: C:\allure-2.29.0\bin\allure.bat generate target/allure-results --clean -o target/allure-report
 
       - name: Upload Allure HTML Report
         if: always()
