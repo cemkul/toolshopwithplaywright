@@ -17,7 +17,6 @@
     </properties>
 
     <dependencies>
-
         <!-- Playwright -->
         <dependency>
             <groupId>com.microsoft.playwright</groupId>
@@ -64,6 +63,12 @@
 
     <build>
         <plugins>
+            <!-- Exec Maven Plugin for Playwright browser installation -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
 
             <!-- Run JUnit 5 tests and enable Allure @Step via AspectJ -->
             <plugin>
@@ -82,7 +87,6 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
