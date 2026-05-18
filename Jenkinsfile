@@ -20,7 +20,7 @@ pipeline {
                     java -version
                     mvn -version
                     git --version
-                    allure --version
+                    /opt/allure/bin/allure --version || true
                 '''
             }
         }
