@@ -1,9 +1,8 @@
-package tests.api.tests;
+package tests.api.dto.product;
 
 import org.junit.jupiter.api.Test;
 import tests.api.base.BaseApiTest;
 import tests.api.client.ProductApiClient;
-import tests.api.dto.ProductResponse;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
