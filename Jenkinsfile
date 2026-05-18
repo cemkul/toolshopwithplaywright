@@ -47,8 +47,11 @@ pipeline {
         expression { params.TEST_SUITE == 'UI' || params.TEST_SUITE == 'ALL' }
     }
     steps {
-        sh 'mvn clean test -Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests'
-    }
+        sh '''
+mvn clean test \
+-Dheadless=true \
+-Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests
+'''}
 }
         stage('05 - Run Integration Tests') {
             when {
