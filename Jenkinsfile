@@ -4,84 +4,100 @@ pipeline {
     parameters {
         choice(
             name: 'TEST_SUITE',
-            choices: ['API', 'UI', 'INTEGRATION', 'ALL'],
-            description: 'Choose which test suite to run'
+            choices: ['API', 'UI', 'ALL'],
+            description: 'Choose test suite'
         )
     }
 
     options {
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '10'))
-        disableConcurrentBuilds()
     }
 
     stages {
-        stage('01 - Checkout Source') {
+
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('02 - Environment Check') {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t toolshop-playwright .'
+            }
+        }
+
+        stage('Prepare Reports') {
             steps {
                 sh '''
-                    java -version
-                    mvn -version
-                    git --version
-                    /opt/allure/bin/allure --version || true
+                    rm -rf docker-target
+                    mkdir -p docker-target
                 '''
             }
         }
 
-        stage('03 - Run API Tests') {
+        stage('Run API Tests') {
             when {
                 expression { params.TEST_SUITE == 'API' || params.TEST_SUITE == 'ALL' }
             }
+
             steps {
-                sh 'mvn clean test -Dtest=ProductApiTests'
+                sh '''
+                    docker run --rm \
+                    -v "$WORKSPACE/docker-target:/app/target" \
+                    toolshop-playwright \
+                    mvn test -Dheadless=true \
+                    -Dtest=ProductApiTests
+                '''
             }
         }
 
-        stage('04 - Run UI Tests') {
-    when {
-        expression { params.TEST_SUITE == 'UI' || params.TEST_SUITE == 'ALL' }
-    }
-    steps {
-        sh '''
-mvn clean test \
--Dheadless=true \
--Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests
-'''}
-}
-        stage('05 - Run Integration Tests') {
+        stage('Run UI Tests') {
             when {
-                expression { params.TEST_SUITE == 'INTEGRATION' || params.TEST_SUITE == 'ALL' }
+                expression { params.TEST_SUITE == 'UI' || params.TEST_SUITE == 'ALL' }
             }
+
             steps {
-                sh 'mvn clean test -Dheadless=true  -Dtest=ProductApiUiIntegrationTests'
+                sh '''
+                    docker run --rm \
+                    -v "$WORKSPACE/docker-target:/app/target" \
+                    toolshop-playwright \
+                    mvn test \
+                    -Dheadless=true \
+                    -Dbrowser=chromium \
+                    -Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests
+                '''
             }
         }
     }
 
     post {
+
         always {
-            junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+
+            junit(
+                allowEmptyResults: true,
+                testResults: 'docker-target/surefire-reports/*.xml'
+            )
 
             allure([
                 includeProperties: false,
-                jdk: '',
-                results: [[path: 'target/allure-results']]
+                results: [[path: 'docker-target/allure-results']]
             ])
 
-            archiveArtifacts artifacts: 'target/allure-results/**, target/surefire-reports/**', allowEmptyArchive: true
+            archiveArtifacts(
+                artifacts: 'docker-target/**',
+                allowEmptyArchive: true
+            )
         }
 
         success {
-            echo "Build successful for suite: ${params.TEST_SUITE}"
+            echo 'Docker tests completed'
         }
 
         failure {
-            echo "Build failed for suite: ${params.TEST_SUITE}"
+            echo 'Docker execution failed'
         }
     }
 }
