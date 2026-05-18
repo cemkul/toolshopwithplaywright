@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -14,8 +20,7 @@ pipeline {
                     java -version
                     mvn -version
                     git --version
-                    pwd
-                    ls -la
+                    allure --version
                 '''
             }
         }
@@ -30,6 +35,14 @@ pipeline {
     post {
         always {
             junit 'target/surefire-reports/*.xml'
+
+            allure([
+                includeProperties: false,
+                jdk: '',
+                results: [[path: 'target/allure-results']]
+            ])
+
+            archiveArtifacts artifacts: 'target/allure-results/**, target/surefire-reports/**', allowEmptyArchive: true
         }
     }
 }
