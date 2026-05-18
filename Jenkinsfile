@@ -45,6 +45,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --rm \
+		    -u "$(id -u):$(id -g)" \
                     -v "$WORKSPACE/docker-target:/app/target" \
                     toolshop-playwright \
                     mvn test -Dheadless=true \
@@ -61,6 +62,7 @@ pipeline {
             steps {
                 sh '''
                     docker run --rm \
+		    -u "$(id -u):$(id -g)" \
                     -v "$WORKSPACE/docker-target:/app/target" \
                     toolshop-playwright \
                     mvn test \
