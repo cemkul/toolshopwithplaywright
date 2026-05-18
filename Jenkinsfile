@@ -58,7 +58,7 @@ mvn clean test \
                 expression { params.TEST_SUITE == 'INTEGRATION' || params.TEST_SUITE == 'ALL' }
             }
             steps {
-                sh 'mvn clean test -Dtest=ProductApiUiIntegrationTests'
+                sh 'mvn clean test -Dheadless=true  -Dtest=ProductApiUiIntegrationTests'
             }
         }
     }
