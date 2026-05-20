@@ -1,4 +1,4 @@
-package tests.api.dto;
+package tests.api.dto.product;
 
 import java.util.List;
 

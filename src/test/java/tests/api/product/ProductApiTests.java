@@ -1,5 +1,5 @@
 package tests.api.dto.product;
-
+import tests.api.dto.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import tests.api.base.BaseApiTest;
 import tests.api.client.ProductApiClient;
