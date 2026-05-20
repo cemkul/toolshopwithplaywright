@@ -4,7 +4,7 @@ pipeline {
     parameters {
         choice(
             name: 'TEST_SUITE',
-            choices: ['API', 'UI', 'ALL'],
+            choices: ['API', 'UI', 'INTEGRATION','ALL'],
             description: 'Choose test suite'
         )
     }
@@ -35,7 +35,36 @@ pipeline {
                 '''
             }
         }
+        stage('Run Integration Tests') {
+            when {
+                expression {
+                    params.TEST_SUITE == 'INTEGRATION' ||
+                    params.TEST_SUITE == 'ALL'
+                }
+            }
 
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'toolshop-auth',
+                    usernameVariable: 'AUTH_EMAIL',
+                    passwordVariable: 'AUTH_PASSWORD'
+                )]) {
+                    sh '''
+                    docker run --rm \
+                    -u "$(id -u):$(id -g)" \
+                    -e AUTH_EMAIL="$AUTH_EMAIL" \
+                    -e AUTH_PASSWORD="$AUTH_PASSWORD" \
+                    -v "$WORKSPACE/docker-target:/app/target" \
+                    toolshop-playwright \
+                    mvn test \
+                    -Dmaven.repo.local=/app/target/.m2/repository \
+                    -Dheadless=true \
+                    -Dbrowser=chromium \
+                    -DincludeTags=INTEGRATION
+                    '''
+                }
+            }
+        }
         stage('Run API Tests') {
             when {
                 expression { params.TEST_SUITE == 'API' || params.TEST_SUITE == 'ALL' }
@@ -56,7 +85,7 @@ pipeline {
                         mvn test \
                         -Dmaven.repo.local=/app/target/.m2/repository \
                         -Dheadless=true \
-                        -Dtest=ProductApiTests
+                        -DincludeTags=API
                     '''
                 }
             }
@@ -83,7 +112,7 @@ pipeline {
                         -Dmaven.repo.local=/app/target/.m2/repository \
                         -Dheadless=true \
                         -Dbrowser=chromium \
-                        -Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests
+                        -DincludeTags=UI
                     '''
                 }
             }

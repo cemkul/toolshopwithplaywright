@@ -5,13 +5,14 @@ import config.ConfigReader;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.ui.BaseTest;
 import tests.api.client.ProductApiClient;
 import utils.ApiLogUtils;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+@Tag("INTEGRATION")
 public class ProductApiUiIntegrationTests extends BaseTest {
 
     ProductApiClient productApi = new ProductApiClient();
