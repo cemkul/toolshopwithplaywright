@@ -42,18 +42,24 @@ pipeline {
                 expression { params.TEST_SUITE == 'API' || params.TEST_SUITE == 'ALL' }
             }
 
-            steps {
-                sh '''
-                    docker run --rm \
-		    -u "$(id -u):$(id -g)" \
-                    -v "$WORKSPACE/docker-target:/app/target" \
-                    toolshop-playwright \
-                    mvn test \
-		    -Dmaven.repo.local=/app/target/.m2/repository \
-                    -Dheadless=true \
-                    -Dtest=ProductApiTests
-                '''
-            }
+withCredentials([usernamePassword(
+    credentialsId: 'toolshop-auth',
+    usernameVariable: 'AUTH_EMAIL',
+    passwordVariable: 'AUTH_PASSWORD'
+)]) {
+    sh '''
+        docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -e AUTH_EMAIL="$AUTH_EMAIL" \
+        -e AUTH_PASSWORD="$AUTH_PASSWORD" \
+        -v "$WORKSPACE/docker-target:/app/target" \
+        toolshop-playwright \
+        mvn test \
+        -Dmaven.repo.local=/app/target/.m2/repository \
+        -Dheadless=true \
+        -Dtest=ProductApiTests
+    '''
+}
         }
 
         stage('Run UI Tests') {
@@ -61,19 +67,24 @@ pipeline {
                 expression { params.TEST_SUITE == 'UI' || params.TEST_SUITE == 'ALL' }
             }
 
-            steps {
-                sh '''
-                    docker run --rm \
-		    -u "$(id -u):$(id -g)" \
-                    -v "$WORKSPACE/docker-target:/app/target" \
-                    toolshop-playwright \
-                    mvn test \
-		    -Dmaven.repo.local=/app/target/.m2/repository \
-		    -Dheadless=true \
-                    -Dbrowser=chromium \
-                    -Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests
-                '''
-            }
+        withCredentials([usernamePassword(
+        credentialsId: 'toolshop-auth',
+         usernameVariable: 'AUTH_EMAIL',
+        passwordVariable: 'AUTH_PASSWORD'
+        )]) {
+             sh '''
+        docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -e AUTH_EMAIL="$AUTH_EMAIL" \
+        -e AUTH_PASSWORD="$AUTH_PASSWORD" \
+        -v "$WORKSPACE/docker-target:/app/target" \
+        toolshop-playwright \
+        mvn test \
+        -Dmaven.repo.local=/app/target/.m2/repository \
+        -Dheadless=true \
+        -Dtest=ProductApiTests
+    '''
+}
         }
     }
 
