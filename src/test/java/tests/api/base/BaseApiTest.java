@@ -3,7 +3,6 @@ import utils.ApiLogUtils;
 import config.ConfigReader;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
-import utils.ApiLogUtils;
 
 public class BaseApiTest {
 

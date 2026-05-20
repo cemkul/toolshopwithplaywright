@@ -49,12 +49,12 @@ public class BaseTest {
         if (context.getExecutionException().isPresent()) {
             Throwable throwable = context.getExecutionException().get();
 
-            AllureUtils.attachScreenshot(page, "FAILED - Screenshot at failure point");
+            AllureUtils.attachScreenshot(page, context.getDisplayName() + " - FAILED");
             AllureUtils.attachText("Error Message", throwable.getMessage());
             AllureUtils.attachText("Stack Trace", getStackTrace(throwable));
 
         } else {
-            AllureUtils.attachScreenshot(page, "PASSED - Final screenshot");
+            AllureUtils.attachScreenshot(page, context.getDisplayName() + " - PASSED");
         }
     };
 
