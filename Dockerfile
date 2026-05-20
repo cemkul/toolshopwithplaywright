@@ -7,4 +7,4 @@ COPY src ./src
 
 RUN mvn dependency:go-offline
 
-CMD ["mvn", "clean", "test", "-Dheadless=true", "-Dtest=ProductApiTests"]
+CMD ["mvn", "clean", "test", "-Dheadless=true"]

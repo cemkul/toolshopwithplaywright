@@ -1,0 +1,7 @@
+.git
+.idea
+target
+docker-target
+docker-allure-results
+allure-report
+.m2-cache
