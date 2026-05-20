@@ -3,7 +3,7 @@ package tests.api.client;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
-import tests.api.dto.ProductResponse;
+import tests.api.dto.product.ProductResponse;
 import utils.TokenManager;
 
 public class ProductApiClient {

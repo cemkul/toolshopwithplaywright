@@ -1,4 +1,4 @@
-package tests.api.dto;
+package tests.api.dto.product;
 
 public class Product {
 
