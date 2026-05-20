@@ -48,7 +48,9 @@ pipeline {
 		    -u "$(id -u):$(id -g)" \
                     -v "$WORKSPACE/docker-target:/app/target" \
                     toolshop-playwright \
-                    mvn test -Dheadless=true \
+                    mvn test \
+		    -Dmaven.repo.local=/app/target/.m2/repository \
+                    -Dheadless=true \
                     -Dtest=ProductApiTests
                 '''
             }
@@ -66,7 +68,8 @@ pipeline {
                     -v "$WORKSPACE/docker-target:/app/target" \
                     toolshop-playwright \
                     mvn test \
-                    -Dheadless=true \
+		    -Dmaven.repo.local=/app/target/.m2/repository \
+		    -Dheadless=true \
                     -Dbrowser=chromium \
                     -Dtest=AuthTests,CartTest,CheckoutTest,HomeTests,ProductTests
                 '''
