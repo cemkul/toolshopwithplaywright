@@ -144,7 +144,7 @@ pipeline {
     post {
 
         always {
-
+            sh 'docker image prune -f' 
             junit(
                 allowEmptyResults: true,
                 testResults: 'docker-target/surefire-reports/*.xml'
