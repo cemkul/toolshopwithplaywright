@@ -3,6 +3,7 @@ package tests.ui;
 
 import Pages.HomePage;
 import Pages.ProductPage;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProductTests extends BaseTest {
 
     @Test
+    @Tag("UI")
     void userShouldOpenProductDetailsPage() {
 
         HomePage homePage = new HomePage(page);
@@ -20,6 +22,7 @@ public class ProductTests extends BaseTest {
     }
 
     @Test
+    @Tag("UI")
     void userShouldFilterByCategory() {
 
         HomePage homePage = new HomePage(page);
@@ -30,6 +33,7 @@ public class ProductTests extends BaseTest {
     }
 
     @Test
+    @Tag("UI")
     void userShouldFilterByBrand() {
 
         HomePage homePage = new HomePage(page);
@@ -40,6 +44,7 @@ public class ProductTests extends BaseTest {
     }
 
     @Test
+    @Tag("UI")
     void userShouldSortProducts() {
 
         HomePage homePage = new HomePage(page);

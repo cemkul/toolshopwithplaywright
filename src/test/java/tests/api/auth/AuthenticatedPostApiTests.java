@@ -1,5 +1,6 @@
 package tests.api.auth;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.api.base.BaseApiTest;
 import tests.api.client.AuthApiClient;
@@ -11,7 +12,7 @@ import tests.api.dto.message.ContactMessageResponse;
 import utils.TokenManager;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+@Tag("API")
 public class AuthenticatedPostApiTests extends BaseApiTest {
 
     AuthApiClient authApi = new AuthApiClient();

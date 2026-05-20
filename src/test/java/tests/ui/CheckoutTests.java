@@ -1,6 +1,7 @@
 package tests.ui;
 
 import Pages.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CheckoutTests extends BaseTest {
 
     @Test
+    @Tag("UI")
     void userShouldCompleteCheckoutSuccessfully() {
 
         HomePage homePage = new HomePage(page);

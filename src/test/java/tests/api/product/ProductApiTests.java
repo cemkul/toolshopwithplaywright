@@ -1,12 +1,13 @@
-package tests.api.dto.product;
+package tests.api.product;
+import org.junit.jupiter.api.Tags;
 import tests.api.dto.product.ProductResponse;
 import org.junit.jupiter.api.Test;
 import tests.api.base.BaseApiTest;
 import tests.api.client.ProductApiClient;
-
+import org.junit.jupiter.api.Tag;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-
+@Tag("API")
 public class ProductApiTests extends BaseApiTest {
 
     ProductApiClient productApi = new ProductApiClient();

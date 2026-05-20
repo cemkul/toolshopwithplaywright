@@ -1,6 +1,7 @@
 package tests.ui;
 
 import Pages.HomePage;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HomeTests extends BaseTest {
 
     @Test
+    @Tag("UI")
     void homePageShouldLoadSuccessfully() {
 
         HomePage homePage = new HomePage(page);
@@ -17,6 +19,7 @@ public class HomeTests extends BaseTest {
     }
 
     @Test
+    @Tag("UI")
     void userShouldSearchProductSuccessfully() {
 
         HomePage homePage = new HomePage(page);

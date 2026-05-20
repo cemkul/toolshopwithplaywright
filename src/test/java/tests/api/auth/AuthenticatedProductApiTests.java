@@ -1,5 +1,6 @@
 package tests.api.auth;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.api.base.BaseApiTest;
 import tests.api.client.AuthApiClient;
@@ -9,7 +10,7 @@ import tests.api.dto.auth.LoginResponse;
 import utils.TokenManager;
 
 import static org.hamcrest.Matchers.notNullValue;
-
+@Tag("API")
 public class AuthenticatedProductApiTests extends BaseApiTest {
 
     AuthApiClient authApi = new AuthApiClient();
